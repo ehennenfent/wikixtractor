@@ -14,6 +14,6 @@ setuptools.setup(
         "progressbar2",
     ],
     entry_points={
-        "console_scripts": ["xtract=src.wikixtractor.extract_stream:main"],
+        "console_scripts": ["xtract=src.wikixtractor.visit_person:main"],
     },
 )

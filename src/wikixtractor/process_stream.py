@@ -71,11 +71,8 @@ tree = ET.parse(sys.argv[1])
 for child in tree.getroot():
     visitor = PageVisitor(child)
     wikitext = visitor.text
-    found = False
     for template in wikitext.filter_templates(recursive=False):
-        if template.name == "short description":
-            print(visitor.title, "::")
-            print(" ",template.get(1).value)
-        found = True
-    if not found:
-        print("====", visitor.title, "====")
+        # print(template.name)
+        if "Infobox" in (name := template.name.strip()):
+            print(visitor.title, "::", name)
+            # print(" ",template. get(1).value)
