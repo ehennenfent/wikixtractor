@@ -51,7 +51,9 @@ class SnakVisitor(Visitor):
             self.value = val["value"]["text"]
         elif ty == "time":
             self.value = val["value"]["time"]
-        elif ty in ("globecoordinate", "quantity"):
+        elif ty == "quantity":
+            self.value = val["value"]["amount"] # TODO: add units
+        elif ty in ("globecoordinate"):
             self.value = str(val)
         else:
             self.value == None
