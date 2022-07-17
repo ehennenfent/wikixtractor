@@ -53,4 +53,5 @@ MANIFEST
 .conda*/
 
 # Working data torrented from Wikipedia
-wiki_data/*
+data/*
+old/*
