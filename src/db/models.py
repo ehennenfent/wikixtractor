@@ -1,32 +1,54 @@
-import enum
-from sqlalchemy import Table, ForeignKey
-from sqlalchemy import Column, Integer, String, Boolean, Enum
+from sqlalchemy import Column, Integer, String, Float, ForeignKey
+from sqlalchemy.orm import relationship
+from sqlalchemy.dialects.sqlite import JSON
 
 from . import Base
+import json
 
-class Gender(enum.Enum):
-    Male = 1
-    Female = 2
-    NB_other = 0
 
-class Person(Base):
-    __tablename__ = 'people'
+class RankData(Base):
+    __tablename__ = 'ranks'
     id = Column(Integer, primary_key=True)
+    sitelink = Column(String)
+    views = Column(Integer, default=0)
+    view_months = Column(Integer, default=0)
+    pagerank = Column(Float, default=0.0)
+
+    wikidata_entry_id = Column(Integer, ForeignKey("items.id"))
+    wikidata_entry = relationship("Item")
+
+
+class Property(Base):
+    __tablename__ = 'properties'
+    id = Column(Integer, primary_key=True, autoincrement=False)
     name = Column(String)
-    score = Column(Integer, default=0)
-    birth_year = Column(Integer)
-    gender = Column(Enum(Gender))
-    is_real = Column(Boolean)
-    is_living = Column(Boolean)
+    description = Column(String)
+    claims = Column(JSON)
+
+    @classmethod
+    def from_visitor(cls, visitor):
+        return cls(
+            id=visitor.id,
+            name=visitor.label,
+            description=visitor.description,
+            claims=json.dumps(visitor.claims),
+        )
 
 
-class Trait(Base):
-    __tablename__ = "traits"
-    id = Column(Integer, primary_key=True)
-    title = Column(String, unique=True)
-    value = Column(Boolean)
+class Item(Base):
+    __tablename__ = 'items'
+    id = Column(Integer, primary_key=True, autoincrement=False)
+    name = Column(String)
+    description = Column(String)
+    sitelink = Column(String)
+    claims = Column(JSON)
 
-trait_associationas = Table("has_traits", Base.metadata,
-    Column("person_id", Integer, ForeignKey("people.id")),
-    Column("trait_id", Integer, ForeignKey("traits.id"))
-)
+    @classmethod
+    def from_visitor(cls, visitor):
+        return cls(
+            id=visitor.id,
+            name=visitor.label,
+            description=visitor.description,
+            sitelink=visitor.wikipedia_link,
+            claims=json.dumps(visitor.claims),
+        )

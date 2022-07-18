@@ -10,10 +10,10 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     keywords="mediawiki",
     install_requires=[
-        "mwparserfromhell",
         "progressbar2",
+        "sqlalchemy",
     ],
     entry_points={
-        "console_scripts": ["xtract=src.wikixtractor.visit_person:main"],
+        "console_scripts": ["xtract=src.wikixtractor.extract_db_from_latest:main"],
     },
 )
