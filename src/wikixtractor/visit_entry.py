@@ -109,10 +109,9 @@ class ItemVisitor(EntityVisitor):
     def visit_sitelinks(self, site_links):
         wiki_data = site_links.get("enwiki", {})
         if "url" in wiki_data:
-            self.wikipedia_link = wiki_data.get("url")
+            self.wikipedia_link = wiki_data.get("url").split("en.wikipedia.org/w/index.php?title=")[-1]
         elif "title" in wiki_data:
-            slug = slug_encode(wiki_data.get("title"))
-            self.wikipedia_link = f"https://en.wikipedia.org/w/index.php?title={slug}"
+            self.wikipedia_link = slug_encode(wiki_data.get("title"))
 
     def __str__(self):
         return "\n".join([
