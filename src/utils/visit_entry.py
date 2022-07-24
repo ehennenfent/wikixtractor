@@ -1,4 +1,4 @@
-import json
+import orjson as json
 import typing as t
 from dataclasses import dataclass
 

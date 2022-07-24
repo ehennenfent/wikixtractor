@@ -12,6 +12,7 @@ setuptools.setup(
     install_requires=[
         "progressbar2",
         "sqlalchemy",
+        "orjson",
     ],
     entry_points={
         "console_scripts": ["xtract=src.wikixtractor.extract_db_from_latest:main"],

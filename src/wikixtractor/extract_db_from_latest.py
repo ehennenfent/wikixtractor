@@ -1,15 +1,14 @@
 import argparse
+from bz2 import BZ2File
 from queue import Queue, Empty
 from threading import Thread
 
-from src.db import Session, engine
-from src.db.models import Property, Item, RankData, instance_table, InstanceRecord
+from progressbar import ProgressBar
 
-from bz2 import BZ2File
-from progressbar import progressbar, ProgressBar
-
+from src.db import Session
+from src.db.models import Property, Item, InstanceRecord
 from src.utils import Id
-from src.wikixtractor.visit_entry import (
+from src.utils.visit_entry import (
     PropertyVisitor,
     parse,
     ItemVisitor,
@@ -18,7 +17,8 @@ from src.wikixtractor.visit_entry import (
 )
 
 MAX_LINES = 101_000_000
-raw_lines = Queue(maxsize=500_000)
+INTERVAL = 20_000
+raw_lines = Queue(maxsize=INTERVAL * 25)
 
 
 def parse_instance_of(entity: ItemVisitor):
@@ -52,7 +52,6 @@ def main():
     )
 
     args = parser.parse_args()
-    interval = 10_000
 
     reader_thread = Thread(target=read_bz2_file, args=(args.data_file_name,))
     reader_thread.start()
@@ -74,14 +73,18 @@ def main():
                             session.add(instance_record)
                         if parsed_entity.wikipedia_link is None:
                             parsed_entity.claims = {}
+                        if parsed_entity.label is None and parsed_entity.description is None:
+                            continue
                         session.add(Item.from_visitor(parsed_entity))
                 except Exception as e:
                     print(
                         "\nError parsing line", f"{line_num} - {type(e).__name__}: {e}"
                     )
-                if (line_num + 1) % interval == 0:
+                if (line_num + 1) % INTERVAL == 0:
+                    pbar.update(line_num, force=True)
                     session.commit()
             except Empty:
+                pbar.update(line_num, force=True)
                 session.commit()
                 break
 

@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.sqlite import JSON
 
 from . import Base
-import json
+import orjson as json
 
 instance_table = Table(
     "instance_of",
@@ -32,7 +32,7 @@ class Property(Base):
             id=visitor.id,
             name=visitor.label,
             description=visitor.description,
-            claims=json.dumps(visitor.claims),
+            claims=visitor.claims,
         )
 
 
@@ -60,7 +60,7 @@ class Item(Base):
             name=visitor.label,
             description=visitor.description,
             sitelink=visitor.wikipedia_link,
-            claims=json.dumps(visitor.claims),
+            claims=visitor.claims,
         )
 
     def __str__(self):
