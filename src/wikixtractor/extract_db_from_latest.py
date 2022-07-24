@@ -9,7 +9,13 @@ from bz2 import BZ2File
 from progressbar import progressbar, ProgressBar
 
 from src.utils import Id
-from src.wikixtractor.visit_entry import PropertyVisitor, parse, ItemVisitor, ClaimVisitor, EntityId
+from src.wikixtractor.visit_entry import (
+    PropertyVisitor,
+    parse,
+    ItemVisitor,
+    ClaimVisitor,
+    EntityId,
+)
 
 MAX_LINES = 101_000_000
 raw_lines = Queue(maxsize=500_000)
@@ -70,7 +76,9 @@ def main():
                             parsed_entity.claims = {}
                         session.add(Item.from_visitor(parsed_entity))
                 except Exception as e:
-                    print("\nError parsing line", f"{line_num} - {type(e).__name__}: {e}")
+                    print(
+                        "\nError parsing line", f"{line_num} - {type(e).__name__}: {e}"
+                    )
                 if (line_num + 1) % interval == 0:
                     session.commit()
             except Empty:

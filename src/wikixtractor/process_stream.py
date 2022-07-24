@@ -2,8 +2,8 @@ import xml.etree.ElementTree as ET
 from mwparserfromhell import parse
 import sys
 
-class Visitor:
 
+class Visitor:
     def __init__(self, node=None):
         if node is not None:
             self.visit(node)
@@ -14,8 +14,8 @@ class Visitor:
             if hasattr(self, method_name):
                 getattr(self, method_name)(child)
 
-class PageVisitor(Visitor):
 
+class PageVisitor(Visitor):
     def __init__(self, node=None):
         self.id = None
         self.title = None
@@ -37,8 +37,8 @@ class PageVisitor(Visitor):
     def __str__(self):
         return f"Page {self.id}: {self.title}\n  {self.short_text}"
 
-class RevisionVisitor(Visitor):
 
+class RevisionVisitor(Visitor):
     def __init__(self, node=None):
         self.timestamp = None
         self.format = None
@@ -55,7 +55,7 @@ class RevisionVisitor(Visitor):
 
     def visit_model(self, node):
         self.model = node.text
-    
+
     def visit_text(self, node):
         if self.format == "text/x-wiki":
             self.text = parse(node.text)
@@ -66,6 +66,7 @@ class RevisionVisitor(Visitor):
             return as_str[:128] + ("..." if len(as_str) > 64 else "")
         else:
             return f"{self.model} page ({self.format})"
+
 
 tree = ET.parse(sys.argv[1])
 for child in tree.getroot():

@@ -17,6 +17,7 @@ properties_mapper.update(
     }
 )
 
+
 def parse_person(data):
     item_id = data["id"]
 
@@ -27,31 +28,29 @@ def parse_person(data):
     else:
         # If there's no english label, bail out
         return None
-    
+
     # Try to get the description
     descriptions = data["descriptions"]
     if "en" in descriptions:
         description = descriptions["en"]["value"]
     else:
         description = ""
-    
+
     claims = data["claims"]
 
     print(f"{label.ljust(20)} ({str(item_id).ljust(12)}):", description)
 
     # Try to get the gender
-    gender_id = claims["P21"][0]['mainsnak']['datavalue']['value']['id']
+    gender_id = claims["P21"][0]["mainsnak"]["datavalue"]["value"]["id"]
 
     # Try to get date of birth
-    dob = claims["P569"][0]['mainsnak']['datavalue']['value']['time']
+    dob = claims["P569"][0]["mainsnak"]["datavalue"]["value"]["time"]
 
     # Try to get date of death
     if "P570" in claims:
-        dod = claims["P570"][0]['mainsnak']['datavalue']['value']['time']
+        dod = claims["P570"][0]["mainsnak"]["datavalue"]["value"]["time"]
     else:
         dod = None
-
-
 
     print(" -", properties_mapper.get(gender_id, gender_id))
     print(" - ", dob, "::", dod)
@@ -67,9 +66,10 @@ def parse(line):
             return
         for cat in claims["P31"]:  # Find all the things this is an instance of
             snak = cat["mainsnak"]
-            categories.add(snak['datavalue']['value']['id'])
+            categories.add(snak["datavalue"]["value"]["id"])
         if "Q5" in categories:  # A human!
             parse_person(data)
+
 
 def main():
     parser = argparse.ArgumentParser(

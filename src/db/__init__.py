@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
-engine = create_engine('sqlite:////mnt/c/Users/ehennenfent/wikidata/wikidata2.db')
+engine = create_engine("sqlite:////mnt/c/Users/ehennenfent/wikidata/wikidata2.db")
 
 
 from .models import Item, Property, RankData

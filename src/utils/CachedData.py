@@ -11,7 +11,13 @@ CACHE_DIR = Path(__file__).parent.parent.joinpath("wiki_data", ".cache")
 
 
 class CachedList:
-    def __init__(self, name: str, regen_func: t.Callable, shard_size: int = ONE_GB, compress: bool = True):
+    def __init__(
+        self,
+        name: str,
+        regen_func: t.Callable,
+        shard_size: int = ONE_GB,
+        compress: bool = True,
+    ):
         self.name = name
         self.shard_size = shard_size
         self.compress = compress
@@ -21,7 +27,7 @@ class CachedList:
         self._regen_func = regen_func
 
     def append(self, item: t.Any):
-        """ Add one item to the tracked store """
+        """Add one item to the tracked store"""
         self._in_memory.append(item)
         self._bytes_written += self._buffer.write(pickle.dump(item))
         self._flush_if_too_large()
@@ -35,19 +41,19 @@ class CachedList:
             os.remove(file)
 
     def save(self, iterable: t.Iterable):
-        """ Replace everything with the current contents """
+        """Replace everything with the current contents"""
         self.flush()
         self.clear()
         for i in iterable:
             self.append(i)
 
     def regenerate(self):
-        """ Get the underlying data from scratch """
+        """Get the underlying data from scratch"""
         self._regen_func(self)
         self.flush()
 
     def get(self, force_regen=False):
-        """ Get the entire saved contents from the disk """
+        """Get the entire saved contents from the disk"""
         return list(i for i in self.stream(force_regen=force_regen))
 
     def generate_if_not_existing(self, force=False):
@@ -55,7 +61,7 @@ class CachedList:
             self.regenerate()
 
     def stream(self, force_regen=False):
-        """ Yields successive cached items, loading more from the disk if we need to """
+        """Yields successive cached items, loading more from the disk if we need to"""
         self.generate_if_not_existing(force=force_regen)
         existing = sorted(glob(str(self.make_path_for("*"))))
 
@@ -78,7 +84,7 @@ class CachedList:
             self.flush()
 
     def flush(self):
-        """ Save any remaining in-memory data to disk """
+        """Save any remaining in-memory data to disk"""
         if self.compress:
             with BZ2File(self.get_next_file(), "wb") as f:
                 self._flush(f)
