@@ -55,3 +55,6 @@ MANIFEST
 # Working data torrented from Wikipedia
 data/*
 old/*
+Q*.json
+P*.json
+src/wiki_data/id_to_label.pkl

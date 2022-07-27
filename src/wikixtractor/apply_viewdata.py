@@ -33,9 +33,11 @@ def main():
         session = Session()
 
         num_processed = 0
-        for line_num, line in progressbar(enumerate(f)):
+        for line_num, line in progressbar(enumerate(f), max_value=36_000_000):
             try:
-                wikicode, title, daily_total = parse_pageview(line.strip().decode("utf-8"))
+                wikicode, title, daily_total = parse_pageview(
+                    line.strip().decode("utf-8")
+                )
 
                 if wikicode == "en.wikipedia":
                     row = session.query(Item).filter(Item.sitelink == title).first()

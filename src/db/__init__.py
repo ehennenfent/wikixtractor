@@ -6,7 +6,7 @@ Base = declarative_base()
 engine = create_engine("sqlite:////mnt/c/Users/ehennenfent/wikidata/wikidata.db")
 
 
-from .models import Item, Property
+from .models import Item, Property, instance_table
 
 Base.metadata.create_all(engine)
 

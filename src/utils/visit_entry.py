@@ -16,6 +16,8 @@ class EntityId:
 
     @classmethod
     def parse(cls, encoded):
+        if encoded[0] == "L":
+            return None
         return cls(type=encoded[0], id=int(encoded[1:]))
 
     def __hash__(self):

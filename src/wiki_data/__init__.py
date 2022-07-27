@@ -7,7 +7,7 @@ import threading
 
 directory = Path(__file__).parent
 
-id_to_label = {'Q': {}, 'P': {}}
+id_to_label = {"Q": {}, "P": {}}
 views = {}
 
 with open(directory.joinpath("id_to_label.pkl"), "rb") as pkf:
@@ -15,4 +15,3 @@ with open(directory.joinpath("id_to_label.pkl"), "rb") as pkf:
 
 # with open(directory.joinpath("pageviews_extracted", "pageviews_en_wikipedia.pkl"), "rb") as pkf:
 #     views = pickle.load(pkf)
-

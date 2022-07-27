@@ -73,7 +73,10 @@ def main():
                             session.add(instance_record)
                         if parsed_entity.wikipedia_link is None:
                             parsed_entity.claims = {}
-                        if parsed_entity.label is None and parsed_entity.description is None:
+                        if (
+                            parsed_entity.label is None
+                            and parsed_entity.description is None
+                        ):
                             continue
                         session.add(Item.from_visitor(parsed_entity))
                 except Exception as e:
